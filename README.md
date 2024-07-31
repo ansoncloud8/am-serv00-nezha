@@ -46,7 +46,9 @@ https://github.com/ansoncloud8/am-serv00-nezha/
 --img
 
 - 3、进入到面板后复制下面代码到面板安装
-bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/main/install-dashboard.sh)
+```
+curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/main/install-dashboard.sh
+```
 
 - 4、然后按照以下提升输入
 | 变量 | 值 | 
@@ -71,7 +73,9 @@ bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/mai
 
 ## 六、把serv00服务器添加到nezha上面
 复制以下代码
-bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/main/install-agent.sh)
+```
+curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/main/install-agent.sh
+```
 - 1、填写以下内容
    
 | 变量 | 值 | 
