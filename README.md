@@ -51,6 +51,7 @@ curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/main/insta
 ```
 
 - 4、然后按照以下提升输入
+  
 | 变量 | 值 | 
 |--------|---------|
 |请输入 OAuth2 提供商(github/gitlab/jihulab/gitee，默认 github):	|回车就行
