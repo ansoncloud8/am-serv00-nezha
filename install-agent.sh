@@ -1,10 +1,10 @@
 #!/bin/bash
 
 USERNAME=$(whoami)
-WORKDIR="/home/${USERNAME}/.am-nezha-agent"
+WORKDIR="/home/${USERNAME}/.nezha-agent"
 
 download_agent() {
-    DOWNLOAD_LINK="https://github.com/ansoncloud8/am-nezha-agent/releases/latest/download/am-nezha-agent_freebsd_amd64.zip"
+    DOWNLOAD_LINK="https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_freebsd_amd64.zip"
     if ! wget -qO "$ZIP_FILE" "$DOWNLOAD_LINK"; then
         echo 'error: Download failed! Please check your network or try again.'
         return 1
@@ -23,7 +23,7 @@ decompression() {
 }
 
 install_agent() {
-    install -m 755 ${TMP_DIRECTORY}/am-nezha-agent ${WORKDIR}/am-nezha-agent
+    install -m 755 ${TMP_DIRECTORY}/nezha-agent ${WORKDIR}/nezha-agent
 }
 
 generate_run_agent(){
@@ -50,39 +50,39 @@ generate_run_agent(){
 
     cat > ${WORKDIR}/start.sh << EOF
 #!/bin/bash
-pgrep -f 'am-nezha-agent' | xargs -r kill
+pgrep -f 'nezha-agent' | xargs -r kill
 cd ${WORKDIR}
-TMPDIR="${WORKDIR}" exec ${WORKDIR}/am-nezha-agent -s ${NZ_DASHBOARD_SERVER}:${NZ_DASHBOARD_PORT} -p ${NZ_DASHBOARD_PASSWORD} --report-delay 4 --disable-auto-update --disable-force-update ${ARGS} >/dev/null 2>&1
+TMPDIR="${WORKDIR}" exec ${WORKDIR}/nezha-agent -s ${NZ_DASHBOARD_SERVER}:${NZ_DASHBOARD_PORT} -p ${NZ_DASHBOARD_PASSWORD} --report-delay 4 --disable-auto-update --disable-force-update ${ARGS} >/dev/null 2>&1
 EOF
     chmod +x ${WORKDIR}/start.sh
 }
 
 run_agent(){
     nohup ${WORKDIR}/start.sh >/dev/null 2>&1 &
-    printf "am-nezha-agent已经准备就绪，请按下回车键启动\n"
+    printf "nezha-agent已经准备就绪，请按下回车键启动\n"
     read
-    printf "正在启动am-nezha-agent，请耐心等待...\n"
+    printf "正在启动nezha-agent，请耐心等待...\n"
     sleep 3
-    if pgrep -f "am-nezha-agent -s" > /dev/null; then
-        echo "am-nezha-agent 已启动！"
+    if pgrep -f "nezha-agent -s" > /dev/null; then
+        echo "nezha-agent 已启动！"
         echo "如果面板处未上线，请检查参数是否填写正确，并停止 agent 进程，删除已安装的 agent 后重新安装！"
-        echo "停止 agent 进程的命令：pgrep -f 'am-nezha-agent' | xargs -r kill"
-        echo "删除已安装的 agent 的命令：rm -rf ~/.am-nezha-agent"
+        echo "停止 agent 进程的命令：pgrep -f 'nezha-agent' | xargs -r kill"
+        echo "删除已安装的 agent 的命令：rm -rf ~/.nezha-agent"
         echo
-        echo "如果你想使用 pm2 管理 agent 进程，请执行：pm2 start ~/.am-nezha-agent/start.sh --name am-nezha-agent"
+        echo "如果你想使用 pm2 管理 agent 进程，请执行：pm2 start ~/.nezha-agent/start.sh --name nezha-agent"
     else
         rm -rf "${WORKDIR}"
-        echo "am-nezha-agent 启动失败，请检查参数填写是否正确，并重新安装！"
+        echo "nezha-agent 启动失败，请检查参数填写是否正确，并重新安装！"
     fi
 }
 
 mkdir -p ${WORKDIR}
 cd ${WORKDIR}
 TMP_DIRECTORY="$(mktemp -d)"
-ZIP_FILE="${TMP_DIRECTORY}/am-nezha-agent_freebsd_amd64.zip"
+ZIP_FILE="${TMP_DIRECTORY}/nezha-agent_freebsd_amd64.zip"
 
 [ ! -e ${WORKDIR}/start.sh ] && generate_run_agent
-[ ! -e ${WORKDIR}/am-nezha-agent ] && download_agent \
+[ ! -e ${WORKDIR}/nezha-agent ] && download_agent \
 && decompression "${ZIP_FILE}" \
 && install_agent
 rm -rf "${TMP_DIRECTORY}"
