@@ -53,7 +53,6 @@ ssh <username>@<panel>.serv00.com
 
 - 3、进入到面板后复制下面代码到面板安装
 ```
-cd domains/<username>.serv00.net
 bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/main/install-dashboard.sh)
 ```
 
@@ -82,7 +81,7 @@ bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/mai
 ## 六、把serv00服务器添加到nezha上面
 复制以下代码
 ```
-curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/main/install-agent.sh
+bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/main/install-agent.sh)
 ```
 - 1、填写以下内容
    
