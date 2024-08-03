@@ -68,15 +68,21 @@ bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/mai
 |请输入站点访问端口	|前面网站设置的第一个端口
 |请输入用于 Agent 接入的 RPC 端口	|第二个端口
 
-- 5、这样我们面板端就安装好了,接着去浏览器里面输入里面的链接如下图所示
---img
+- 5、这样我们面板端就安装好了,接着去浏览器里面输入p安装成功后输出的里面的链接如下图所示
+  <img width="1497" alt="nezha" src="https://github.com/user-attachments/assets/460f08ba-4c73-49e9-a334-690012b025d3">
 
 - 6、登入到面板端后点击右边用户名的管理后台找到设置里面的未接入CDN的面板服务器域名/IP
+  
+  <img width="1260" alt="nezha-1" src="https://github.com/user-attachments/assets/82767233-8010-439a-8e9d-39f26ed9f788">
+
 填入解析的IP或者域名后保存
 
 点击服务器新增服务器，名称随便填点击下面的的新增
 
 下来会看到一个服务器后面的密钥下面我们会用到
+
+<img width="1223" alt="serv00-3" src="https://github.com/user-attachments/assets/8a430a9d-3d55-47d7-846d-6eb5a8caca1a">
+
 
 ## 六、把serv00服务器添加到nezha上面
 复制以下代码
@@ -89,9 +95,10 @@ bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/mai
 |--------|---------|
 |请输入 Dashboard 站点地址	|解析的IP或者域名
 |请输入面板 RPC 端口：	|第二个端口
-|请输入 Agent 密钥	|面板服务器后面的密钥
+|请输入 Agent 密钥	|面板服务器后面的密钥(面板新加的服务器配置)
 
 - 2、接下来直接回车就行了。然后我们去到网址点击服务器前面的图像就会看到我们的服务器在线了。
-   
---img
+<img width="959" alt="serv00-4" src="https://github.com/user-attachments/assets/693d4297-b777-41b8-9f66-2323edecca0b">
+<img width="1239" alt="serv00-5" src="https://github.com/user-attachments/assets/289746b1-5bbf-494a-b38a-72329a104195">
+
 
