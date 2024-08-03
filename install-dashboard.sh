@@ -4,7 +4,12 @@ USERNAME=$(whoami) && \
 WORKDIR="/home/${USERNAME}/.nezha-dashboard"
 
 get_current_version() {
-    CURRENT_VERSION=$(cat ${WORKDIR}/VERSION)
+    # 如果VERSION文件不存在，设置CURRENT_VERSION为空
+    if [ ! -f ${WORKDIR}/VERSION ]; then
+        CURRENT_VERSION=""
+    else
+        CURRENT_VERSION=$(cat ${WORKDIR}/VERSION)
+    fi
 }
 
 get_latest_version() {
