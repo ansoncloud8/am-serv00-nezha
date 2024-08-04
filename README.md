@@ -7,8 +7,7 @@
 ## 一、需要准备的前提资料
 ### 1、首先注册一个Serv00账号，建议使用gmail邮箱注册，注册好会有一封邮箱上面写着你注册时的用户名和密码
 - 注册帐号地址：https://serv00.com
-<center>注册帐号请查看下面视频</center>
-<center><a href="https://youtu.be/NET1FTlfDTs">[点击观看视频教程]</a></center>
+- 注册帐号请查看下面视频：<a href="https://youtu.be/NET1FTlfDTs">[点击观看视频教程]</a>
 
 ![image](https://github.com/user-attachments/assets/b3b3733b-3553-45dd-9346-c4664251755f)
   
@@ -27,6 +26,8 @@ Telegram频道：https://t.me/AM_CLUBS
 
 - 6、如果想用域名要解析你添加到serv00里面的A记录即可。找到 WWW websites 点击后面的 Mange SSL 就可以看到二个IP，一般添加第一个IP就可以了。
 - 7、添加自己的域名开启DNS的话 在左边栏 DNS zones也可以看到A记录
+- 免费us.kg域名申请教程：<a href="https://youtu.be/cI36vtXuQrM">[点击观看视频教程]</a>
+- 免费dynv6域名申请教程：<a href="https://youtu.be/Nl0BV2ocYb8">[点击观看视频教程]</a>
 
 ## 四、 准备Github里面的三个东西，按照以下步骤后保存到一边
 - 1、进入Gihub点击右上角头像找到 Settings 点击后往下拉找到左边栏下面的 Developer settings 点击
