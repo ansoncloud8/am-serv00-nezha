@@ -104,8 +104,8 @@ bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/mai
 | 变量 | 值 | 
 |--------|---------|
 |请输入 Dashboard 站点地址	|解析的IP或者域名
-|请输入面板 RPC 端口：	|第二个端口
-|请输入 Agent 密钥	|面板服务器后面的密钥(面板新加的服务器配置)
+|请输入面板 RPC 端口：	|所有服务器都是面板时输入的第二个端口
+|请输入 Agent 密钥	|面板服务器后面的密钥(面板新加的服务器配置)，每台服务器都要在面板增加一台对应上
 
 - 2、接下来直接回车就行了。然后我们去到网址点击服务器前面的图像就会看到我们的服务器在线了。
 <img width="959" alt="serv00-4" src="https://github.com/user-attachments/assets/693d4297-b777-41b8-9f66-2323edecca0b">
