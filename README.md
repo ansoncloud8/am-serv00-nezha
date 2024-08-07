@@ -93,24 +93,44 @@ bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/mai
 
 <img width="1223" alt="serv00-3" src="https://github.com/user-attachments/assets/8a430a9d-3d55-47d7-846d-6eb5a8caca1a">
 
+- 7、dashboard保活命令（**<username>要换成你的ssh连接用户名**）
+```
+ (crontab -l; echo "*/12 * * * * pgrep -x "dashboard" > /dev/null || nohup /home/<username>/.nezha-dashboard/start.sh >/dev/null 2>&1 &") | crontab -
+```
+
+- 8、dashboard卸载命令(卸载完就执行第3的安装命令重新安装)
+```
+pgrep -f 'dashboard' | xargs -r kill
+rm -rf ~/.nezha-dashboard
+```
 
 ## 六、把serv00服务器添加到nezha上面
-复制以下代码
+- 1、安装命令
 ```
 bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/main/install-agent.sh)
 ```
-- 1、填写以下内容
+- 根据提示填写以下内容
    
 | 变量 | 值 | 
 |--------|---------|
 |请输入 Dashboard 站点地址	|解析的IP或者域名
-|请输入面板 RPC 端口：	|所有服务器都是面板时输入的第二个端口
-|请输入 Agent 密钥	|面板服务器后面的密钥(面板新加的服务器配置)，每台服务器都要在面板增加一台对应上
+|请输入面板 RPC 端口：	|第二个端口
+|请输入 Agent 密钥	|面板服务器后面的密钥(面板新加的服务器配置)
 
 - 2、接下来直接回车就行了。然后我们去到网址点击服务器前面的图像就会看到我们的服务器在线了。
 <img width="959" alt="serv00-4" src="https://github.com/user-attachments/assets/693d4297-b777-41b8-9f66-2323edecca0b">
 <img width="1239" alt="serv00-5" src="https://github.com/user-attachments/assets/289746b1-5bbf-494a-b38a-72329a104195">
 
+- 3、agent保活命令（**<username>要换成你的ssh连接用户名**）
+```
+  (crontab -l; echo "*/12 * * * * pgrep -x "nezha-agent" > /dev/null || nohup /home/<username>/.nezha-agent/start.sh >/dev/null 2>&1 &") | crontab -
+```
+
+- 4、agent卸载命令(卸载完就执行第1的安装命令重新安装)
+```
+pgrep -f 'nezha-agent' | xargs -r kill
+rm -rf ~/.nezha-agent
+```
 
 ## 备注
 1、查看保活crontab任务
@@ -121,7 +141,9 @@ crontab -l
 上面命令完会显示下面信息就是有保活设置成功(如果没有就在面板上增加下面定时任务)
 ```
 */12 * * * * pgrep -x "dashboard" > /dev/null || nohup /home/<username>/.nezha-dashboard/start.sh >/dev/null 2>&1 &
+*/12 * * * * pgrep -x "nezha-agent" > /dev/null || nohup /home/<username>/.nezha-agent/start.sh >/dev/null 2>&1 &
 ```
+
 
  #
 ▶️ **新人[YouTube](https://youtube.com/@AM_CLUB)** 需要您的支持，请务必帮我**点赞**、**关注**、**打开小铃铛**，***十分感谢！！！*** ✅
