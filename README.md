@@ -98,7 +98,7 @@ bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/mai
  (crontab -l; echo "*/12 * * * * pgrep -x "dashboard" > /dev/null || nohup /home/<username>/.nezha-dashboard/start.sh >/dev/null 2>&1 &") | crontab -
 ```
 
-- 8、dashboard卸载命令(卸载完就执行第3的安装命令重新安装)
+- 8、dashboard卸载命令(卸载完就执行第3步的安装命令重新安装)
 ```
 pgrep -f 'dashboard' | xargs -r kill
 rm -rf ~/.nezha-dashboard
@@ -126,7 +126,7 @@ bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/mai
   (crontab -l; echo "*/12 * * * * pgrep -x "nezha-agent" > /dev/null || nohup /home/<username>/.nezha-agent/start.sh >/dev/null 2>&1 &") | crontab -
 ```
 
-- 4、agent卸载命令(卸载完就执行第1的安装命令重新安装)
+- 4、agent卸载命令(卸载完就执行第1步的安装命令重新安装)
 ```
 pgrep -f 'nezha-agent' | xargs -r kill
 rm -rf ~/.nezha-agent
