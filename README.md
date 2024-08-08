@@ -97,7 +97,7 @@ bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/mai
 
 <img width="1223" alt="serv00-3" src="https://github.com/user-attachments/assets/8a430a9d-3d55-47d7-846d-6eb5a8caca1a">
 
-- 7、dashboard保活命令（**<username>要换成你的ssh连接用户名**）
+- 7、dashboard保活命令（**命令中的<username>要换成你的登录名**）
 ```
  (crontab -l; echo "*/12 * * * * pgrep -x "dashboard" > /dev/null || nohup /home/<username>/.nezha-dashboard/start.sh >/dev/null 2>&1 &") | crontab -
 ```
@@ -125,7 +125,7 @@ bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/mai
 <img width="959" alt="serv00-4" src="https://github.com/user-attachments/assets/693d4297-b777-41b8-9f66-2323edecca0b">
 <img width="1239" alt="serv00-5" src="https://github.com/user-attachments/assets/289746b1-5bbf-494a-b38a-72329a104195">
 
-- 3、agent保活命令（**<username>要换成你的ssh连接用户名**）
+- 3、agent保活命令（**命令中的<username>要换成你的登录名**）
 ```
   (crontab -l; echo "*/12 * * * * pgrep -x "nezha-agent" > /dev/null || nohup /home/<username>/.nezha-agent/start.sh >/dev/null 2>&1 &") | crontab -
 ```
