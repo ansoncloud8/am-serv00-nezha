@@ -21,6 +21,10 @@ Telegram频道：https://t.me/AM_CLUBS
 ## 三、安装前需准备好以下工作
 - 1、登入邮件里面发你的 DevilWEB webpanel 后面的网址，进入网站后点击 Change languag 把面板改成英文
 - 2、然后在左边栏点击 Additonal services ,接着点击 Run your own applications 看到一个 Enable 点击
+也可以ssh连接用命令设置，设置成功要退出ssh再重新连接
+```
+devil binexec on
+```
 - 3、找到 Port reservation 点击后面的 Add Port 新开二个端口，随便写，也可以点击 Port后面的 Random随机选择Port tybe 选择 TCP
 - 4、然后点击 Port list 你会看到二个端口
 ![image](https://github.com/user-attachments/assets/7060edbc-25f7-4add-a0fc-219a002c4048)
