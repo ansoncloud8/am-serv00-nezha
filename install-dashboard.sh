@@ -4,14 +4,14 @@ USERNAME=$(whoami) && \
 WORKDIR="/home/${USERNAME}/.nezha-dashboard"
 
 get_current_version() {
-    echo "当前版本"
+    # echo "当前版本"
     # 如果VERSION文件不存在，设置CURRENT_VERSION为空
     if [ ! -f ${WORKDIR}/VERSION ]; then
         CURRENT_VERSION="v0.0.0"
-        echo "1当前版本：${CURRENT_VERSION}"
+        # echo "1当前版本：${CURRENT_VERSION}"
     else
         CURRENT_VERSION=$(cat ${WORKDIR}/VERSION)
-        echo "2当前版本：${CURRENT_VERSION}"
+        # echo "2当前版本：${CURRENT_VERSION}"
     fi
 }
 
@@ -113,9 +113,9 @@ TMP_DIRECTORY="$(mktemp -d)"
 INSTALLER_FILE="${TMP_DIRECTORY}/dashboard"
 
 get_current_version
-echo "当前版本：${CURRENT_VERSION}"
+# echo "当前版本：${CURRENT_VERSION}"
 get_latest_version
-echo "最新版本：${RELEASE_LATEST}"
+# echo "最新版本：${RELEASE_LATEST}"
 
 [ ! -e ${WORKDIR}/data/config.yaml ] && generate_config
 [ ! -e ${WORKDIR}/start.sh ] && generate_run
