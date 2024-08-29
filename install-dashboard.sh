@@ -6,7 +6,7 @@ WORKDIR="/home/${USERNAME}/.nezha-dashboard"
 get_current_version() {
     # 如果VERSION文件不存在，设置CURRENT_VERSION为空
     if [ ! -f ${WORKDIR}/VERSION ]; then
-        CURRENT_VERSION=""
+        CURRENT_VERSION="v0.0.1"
     else
         CURRENT_VERSION=$(cat ${WORKDIR}/VERSION)
     fi
