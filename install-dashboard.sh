@@ -10,8 +10,8 @@ get_current_version() {
     else
         CURRENT_VERSION=$(cat ${WORKDIR}/VERSION)
     fi
-    # 如果CURRENT_VERSION为空，设置CURRENT_VERSION为"v0.0.1"
-    if [ -z "${CURRENT_VERSION}" ]; then
+    # 如果 CURRENT_VERSION 为空或为 null，设置 CURRENT_VERSION 为 "v0.0.0"
+    if [ -z "$CURRENT_VERSION" ] || [ -n "${CURRENT_VERSION+null}" ]; then
         CURRENT_VERSION="v0.0.0"
     fi
 }
