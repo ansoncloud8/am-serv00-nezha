@@ -114,7 +114,9 @@ TMP_DIRECTORY="$(mktemp -d)"
 INSTALLER_FILE="${TMP_DIRECTORY}/dashboard"
 
 get_current_version
+echo "当前版本：${RELEASE_LATEST}"
 get_latest_version
+echo "最新版本：${CURRENT_VERSION}"
 
 [ ! -e ${WORKDIR}/data/config.yaml ] && generate_config
 [ ! -e ${WORKDIR}/start.sh ] && generate_run
