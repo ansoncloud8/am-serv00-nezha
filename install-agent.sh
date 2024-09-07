@@ -91,7 +91,7 @@ ZIP_FILE="${TMP_DIRECTORY}/nezha-agent_freebsd_amd64.zip"
 
 [ ! -e ${WORKDIR}/start.sh ] && generate_run_agent
 
-if [ ! -e "${WORKDIR}/nezha-agent" ] && [ -n "${VERSION}" ]; then
+if [ ! -e "${WORKDIR}/nezha-agent" ] || [ -n "${VERSION}" ]; then
     download_agent
 fi
 
