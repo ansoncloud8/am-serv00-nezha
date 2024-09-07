@@ -30,6 +30,7 @@ download_nezha() {
         echo 'error: Download failed! Please check your network or try again.'
         return 1
     fi
+    echo "下载最新版本：${RELEASE_LATEST}"
     curl -s https://api.github.com/repos/ansoncloud8/am-nezha-freebsd/releases/latest | jq -r '.tag_name' > ${WORKDIR}/VERSION
     return 0
 }
