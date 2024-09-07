@@ -2,6 +2,8 @@
 
 USERNAME=$(whoami) && \
 WORKDIR="/home/${USERNAME}/.nezha-dashboard"
+CURRENT_VERSION="v0.0.0"
+RELEASE_LATEST="v0.0.0"
 
 get_current_version() {
     # echo "当前版本"
