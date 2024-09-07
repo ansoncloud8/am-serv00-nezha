@@ -134,13 +134,17 @@ rm -rf ~/.nezha-dashboard
 ```
 
 
-## 六、把serv00服务器添加到nezha上面
+## 六、把serv00服务器添加到nezha上面(其它要监控和多台服务器都是此命令安装就可以)
 - 1、安装命令
 ```
 bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/main/install-agent.sh)
 ```
-- 根据提示填写以下内容
-   
+- 2、指定版本下载安装(把VERSION=自己修改对应要安装的版本号)
+```
+VERSION=v0.19.5 bash <(curl -s https://raw.githubusercontent.com/ansoncloud8/am-serv00-nezha/main/install-agent.sh)
+```
+
+- 根据提示填写以下内容   
 | 变量 | 值 | 
 |--------|---------|
 |请输入 Dashboard 站点地址	|解析的IP或者域名
