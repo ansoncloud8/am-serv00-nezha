@@ -97,8 +97,6 @@ if [ ! -e "${WORKDIR}/nezha-agent" ] || [ -n "${VERSION}" ]; then
     && install_agent
 fi
 
-decompression "${ZIP_FILE}" \
-&& install_agent
 rm -rf "${TMP_DIRECTORY}"
 [ -e ${WORKDIR}/start.sh ] && run_agent
 
