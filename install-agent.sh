@@ -90,8 +90,12 @@ TMP_DIRECTORY="$(mktemp -d)"
 ZIP_FILE="${TMP_DIRECTORY}/nezha-agent_freebsd_amd64.zip"
 
 [ ! -e ${WORKDIR}/start.sh ] && generate_run_agent
-[ ! -e ${WORKDIR}/nezha-agent ] && download_agent \
-&& decompression "${ZIP_FILE}" \
+
+if [ ! -e "${WORKDIR}/nezha-agent" ] && [ -n "${VERSION}" ]; then
+    download_agent
+fi
+
+decompression "${ZIP_FILE}" \
 && install_agent
 rm -rf "${TMP_DIRECTORY}"
 [ -e ${WORKDIR}/start.sh ] && run_agent
