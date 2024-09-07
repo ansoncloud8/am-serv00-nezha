@@ -13,6 +13,7 @@ get_current_version() {
         CURRENT_VERSION=$(cat ${WORKDIR}/VERSION)
         # echo "2当前版本：${CURRENT_VERSION}"
     fi
+    echo "当前版本：${CURRENT_VERSION}"
 }
 
 get_latest_version() {
@@ -22,6 +23,7 @@ get_latest_version() {
         echo "error: Failed to get the latest release version, please check your network."
         exit 1
     fi
+    echo "最新版本：${RELEASE_LATEST}"
 }
 
 download_nezha() {
