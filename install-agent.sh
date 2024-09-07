@@ -13,6 +13,7 @@ download_agent() {
 	DOWNLOAD_LINK="https://github.com/nezhahq/agent/releases/${VERSION}/download/nezha-agent_freebsd_amd64.zip"
     fi
     echo "下载版本：${VERSION}"
+    echo "下载版本：${DOWNLOAD_LINK}"
     if ! wget -qO "$ZIP_FILE" "$DOWNLOAD_LINK"; then
         echo 'error: Download failed! Please check your network or try again.'
         return 1
