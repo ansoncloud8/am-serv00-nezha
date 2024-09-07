@@ -7,7 +7,7 @@ download_agent() {
     if [ -z "$VERSION" ]; then
         # 如果没有传入VERSION变量，下载最新版本
         DOWNLOAD_LINK="https://github.com/nezhahq/agent/releases/latest/download/nezha-agent_freebsd_amd64.zip"
-        VERSION=$RELEASE_LATEST  # 将版本设置为最新版本
+		VERSION="最新版本"
     else
         # 如果传入了VERSION变量，下载指定版本
 		DOWNLOAD_LINK="https://github.com/nezhahq/agent/releases/${VERSION}/download/nezha-agent_freebsd_amd64.zip"
@@ -16,6 +16,7 @@ download_agent() {
         echo 'error: Download failed! Please check your network or try again.'
         return 1
     fi
+	echo "下载版本：${VERSION}"
     return 0
 }
 
