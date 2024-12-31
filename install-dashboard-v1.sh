@@ -1,117 +1,109 @@
 #!/bin/bash
 
+# 定义颜色
+re="\033[0m"
+red="\033[1;91m"
+green="\e[1;32m"
+yellow="\e[1;33m"
+purple="\e[1;35m"
+red() { echo -e "\e[1;91m$1\033[0m"; }
+green() { echo -e "\e[1;32m$1\033[0m"; }
+yellow() { echo -e "\e[1;33m$1\033[0m"; }
+purple() { echo -e "\e[1;35m$1\033[0m"; }
+reading() { read -p "$(red "$1")" "$2"; }
+
 USERNAME=$(whoami) && \
 WORKDIR="/home/${USERNAME}/.nezha-dashboard"
-CURRENT_VERSION="v0.0.0"
-RELEASE_LATEST="v0.0.0"
 
-get_current_version() {
-    # echo "当前版本"
-    # 如果VERSION文件不存在，设置CURRENT_VERSION为空
-    if [ ! -f ${WORKDIR}/VERSION ]; then
-        CURRENT_VERSION="v0.0.0"
-        # echo "1当前版本：${CURRENT_VERSION}"
-    else
-        CURRENT_VERSION=$(cat ${WORKDIR}/VERSION)
-        # echo "2当前版本：${CURRENT_VERSION}"
-    fi
-    echo "当前版本：${CURRENT_VERSION}"
-}
-
-get_latest_version() {
-    # Get latest release version number
-    RELEASE_LATEST=$(curl -s https://api.github.com/repos/amclubs/am-nezha-freebsd/releases/latest | jq -r '.tag_name')
-    if [[ -z "$RELEASE_LATEST" ]]; then
-        echo "error: Failed to get the latest release version, please check your network."
-        exit 1
-    fi
-    echo "最新版本：${RELEASE_LATEST}"
-}
+[[ "$HOSTNAME" == "s1.ct8.pl" ]] && WORKDIR="${WORKDIR}" || WORKDIR="${WORKDIR}"
+[ -d "$WORKDIR" ] || (mkdir -p "$WORKDIR" && chmod 777 "$WORKDIR")
 
 download_nezha() {
+    # 检查是否指定版本
     if [ -z "$VERSION" ]; then
-        # 如果没有传入VERSION变量，下载最新版本
-        DOWNLOAD_LINK="https://github.com/amclubs/am-nezha-freebsd/releases/latest/download/nezha-dashboard.tar.gz"
-        VERSION=$RELEASE_LATEST  # 将版本设置为最新版本
+        echo "未指定版本，下载最新版本..."
+        DOWNLOAD_LINK="https://github.com/ansoncloud8/am-nezha-freebsd/releases/latest/download/nezha-dashboard.tar.gz"
     else
-        # 如果传入了VERSION变量，下载指定版本
-        DOWNLOAD_LINK="https://github.com/amclubs/am-nezha-freebsd/releases/download/${VERSION}/nezha-dashboard.tar.gz"
+        echo "指定版本为：$VERSION"
+        DOWNLOAD_LINK="https://github.com/ansoncloud8/am-nezha-freebsd/releases/download/${VERSION}/nezha-dashboard.tar.gz"
     fi
 
-    if ! wget -qO "$INSTALLER_FILE" "$DOWNLOAD_LINK"; then
-        echo 'error: 下载失败，请检查网络或重试。'
-        return 1
-    fi
-    echo "下载版本：${VERSION}"
-	  curl -s https://api.github.com/repos/amclubs/am-nezha-freebsd/releases/latest | jq -r '.tag_name' > ${WORKDIR}/VERSION
-    echo "${VERSION}" > "${WORKDIR}/VERSION"  # 将版本信息写入VERSION文件
-    
-    # 解压缩文件
-    if ! tar -zxvf "$INSTALLER_FILE" -C "$WORKDIR"; then
-        echo 'error: 解压失败，请检查文件或重试。'
-        return 1
+    if [ -e "$FILENAME" ]; then
+        echo "$FILENAME 已存在，跳过下载"
+    else
+        echo "正在下载文件..."
+        FILENAME="$WORKDIR/nezha-dashboard.tar.gz"
+        if ! wget -q -O "$FILENAME" "$DOWNLOAD_LINK"; then
+            echo "error: 文件 $FILENAME 下载失败。"
+            exit
+        fi
+        echo "已成功下载 $FILENAME"
     fi
 
-    # 重命名解压后的文件夹为dashboard
-    if [ -d "$WORKDIR/nezha-dashboard" ]; then
-        mv "$WORKDIR/nezha-dashboard" "$WORKDIR/dashboard"
-    else
-        echo 'error: 解压后的文件夹不存在，可能解压失败或文件结构已更改。'
-        return 1
+    echo "正在解压文件..."
+    if ! tar -zxvf "$FILENAME" -C "$WORKDIR" > /dev/null 2>&1; then
+        echo "error: 解压失败，请检查文件或重试。"
+        exit
     fi
-    
+    echo "解压成功。"
+
+    if [ -e "$WORKDIR/nezha-dashboard" ]; then
+	       mv $WORKDIR/nezha-dashboard ${WORKDIR}/dashboard
+	       chmod +x ${WORKDIR}/dashboard
+								rm -f $WORKDIR/data/config.yaml
+        echo "文件夹已重命名为 dashboard。"
+    else
+        echo "error: 解压后的文件夹不存在，可能解压失败或文件结构已更改。"
+        exit
+    fi
+				
+	#echo "正在清理下载文件..."
+	rm -f "$FILENAME";
+				
     return 0
 }
 
-
-install_nezha() {
-    install -m 755 ${TMP_DIRECTORY}/dashboard ${WORKDIR}/dashboard
-}
-
 generate_config(){
-    # echo "关于 Gitee Oauth2 应用：在 https://gitee.com/oauth/applications 创建，无需审核，Callback 填 http(s)://域名或IP/oauth2/callback"
-    # printf "请输入 OAuth2 提供商(github/gitlab/jihulab/gitee，默认 github): "
-    # read -r nz_oauth2_type
-    # printf "请输入 Oauth2 应用的 Client ID: "
-    # read -r nz_github_oauth_client_id
-    # printf "请输入 Oauth2 应用的 Client Secret: "
-    # read -r nz_github_oauth_client_secret
-    # printf "请输入 GitHub/Gitee 登录名作为管理员，多个以逗号隔开: "
-    # read -r nz_admin_logins
-    # printf "请输入站点标题: "
-    # read -r nz_site_title
+    echo
+    echo "初始化nezha-dashboard配置"
+
+    if [ -e "$WORKDIR/data/config.yaml" ]; then
+        echo "已初始化nezha-dashboard配置"
+    else
+        nohup ${WORKDIR}/start.sh >/dev/null 2>&1 &
+        sleep 3
+        dashboard_pid=$(ps aux | grep '$WORKDIR/dashboard' | grep -v 'grep' | awk '{print $2}')
+        if [ -n "$dashboard_pid" ]; then
+            kill -9 "$dashboard_pid"
+            echo "初始化nezha-dashboard配置成功"
+        else
+            echo "dashboard未正常启动，初始化失败"
+            return 1
+        fi
+    fi
+
     printf "请输入站点访问端口: "
     read -r nz_site_port
-    # printf "请输入用于 Agent 接入的 RPC 端口: "
-    # read -r nz_grpc_port
 
-    # if [ -z "$nz_admin_logins" ] || [ -z "$nz_github_oauth_client_id" ] || [ -z "$nz_github_oauth_client_secret" ] || [ -z "$nz_site_title" ] || [ -z "$nz_site_port" ] || [ -z "$nz_grpc_port" ]; then
-    #     echo "error! 所有选项都不能为空"
-    #     return 1
-    #     rm -rf ${WORKDIR}
-    #     exit
-    # fi
+    if [ -z "$nz_site_port" ]; then
+        echo "error! 所有选项都不能为空"
+        rm -rf ${WORKDIR}
+        return 1
+    fi
 
-    # if [ -z "$nz_oauth2_type" ]; then
-    #     nz_oauth2_type=github
-    # fi
-    # wget -O ${WORKDIR}/data/config.yaml "https://raw.githubusercontent.com/naiba/nezha/master/script/config.yaml"
-
-    # sed -i '' "s/nz_oauth2_type/${nz_oauth2_type}/" ${WORKDIR}/data/config.yaml
-    # sed -i '' "s/nz_admin_logins/${nz_admin_logins}/" ${WORKDIR}/data/config.yaml
-    # sed -i '' "s/nz_grpc_port/${nz_grpc_port}/" ${WORKDIR}/data/config.yaml
-    # sed -i '' "s/nz_github_oauth_client_id/${nz_github_oauth_client_id}/" ${WORKDIR}/data/config.yaml
-    # sed -i '' "s/nz_github_oauth_client_secret/${nz_github_oauth_client_secret}/" ${WORKDIR}/data/config.yaml
-    # sed -i '' "s/nz_language/zh-CN/" ${WORKDIR}/data/config.yaml
-    # sed -i '' "s/nz_site_title/${nz_site_title}/" ${WORKDIR}/data/config.yaml
-    sed -i '' "s/80/${nz_site_port}/" ${WORKDIR}/data/config.yaml
-
+    if [ -e "${WORKDIR}/data/config.yaml" ]; then
+        sed -i '' "s/8008/${nz_site_port}/" ${WORKDIR}/data/config.yaml
+        echo "端口已更新为: ${nz_site_port}"
+    else
+        echo "配置文件不存在，更新端口失败"
+        return 1
+    fi
 }
 
 generate_run() {
     cat > ${WORKDIR}/start.sh << EOF
 #!/bin/bash
-pgrep -f 'dashboard' | xargs -r kill
+pgrep -f '$WORKDIR/dashboard' | xargs -r kill
 cd ${WORKDIR}
 exec ${WORKDIR}/dashboard >/dev/null 2>&1
 EOF
@@ -125,43 +117,133 @@ run_nezha(){
     read
     printf "正在启动nezha-dashboard，请耐心等待...\n"
     sleep 3
-    if pgrep -f "dashboard" > /dev/null; then
+    if pgrep -f "$WORKDIR/dashboard" > /dev/null; then
         echo "nezha-dashboard 已启动，请使用浏览器访问 http://${IP_ADDRESS}:${nz_site_port} 进行进一步配置。"
         echo "如果你配置了 Proxy 或者 Cloudflared Argo Tunnel，也可以使用域名访问 nezha-dashboard。"
         echo 
     else
         rm -rf "${WORKDIR}"
-        echo "nezha-dashboard启动失败，请检查端口开放情况，并保证参数填写正确，再重新安装！"
+        echo "nezha-dashboard启动失败，请检查端口开放情况，并保证参数填写正确，请再重新安装！"
     fi
 }
 
+check_and_run() {
+    if pgrep -f '$WORKDIR/dashboard' > /dev/null; then
+        echo "程序已运行"
+        exit
+    fi
 
-mkdir -p ${WORKDIR}/data
-cd ${WORKDIR}
-TMP_DIRECTORY="$(mktemp -d)"
-INSTALLER_FILE="${TMP_DIRECTORY}/dashboard"
-
-get_current_version
-# echo "当前版本：${CURRENT_VERSION}"
-get_latest_version
-# echo "最新版本：${RELEASE_LATEST}"
-
-[ ! -e ${WORKDIR}/data/config.yaml ] && generate_config
-[ ! -e ${WORKDIR}/start.sh ] && generate_run
-
-if [ -n "$VERSION" ] || [ "${RELEASE_LATEST}" != "${CURRENT_VERSION}" ]; then
-    download_nezha
-    EXIT_CODE=$?
-    if [ ${EXIT_CODE} -eq 0 ]; then
-        :
-    else
-        rm -r "$TMP_DIRECTORY"
+    if [ -e ${WORKDIR}/start.sh ]; then
+        echo "nezha-dashboard已安装，重新运行start.sh"
         run_nezha
         exit
     fi
-    install_nezha
-    rm -rf "$TMP_DIRECTORY"
-    run_nezha
-    exit
-fi
-run_nezha
+}
+
+install_nezha() {
+	echo -e "${yellow}开始运行前，请确保在面板${purple}已开放1个tcp端口${re}"
+	echo -e "${yellow}面板${purple}Additional services中的Run your own applications${yellow}已开启为${purplw}Enabled${yellow}状态${re}"
+	reading "\n确定继续安装吗？【y/n】: " choice
+	case "$choice" in
+	[Yy])
+	  cd $WORKDIR
+	  check_and_run
+	  download_nezha && wait
+	  generate_run
+	  generate_config
+	  run_nezha && sleep 3
+	;;
+	[Nn]) exit 0 ;;
+	*) red "无效的选择，请输入y或n" && menu ;;
+  esac
+}
+
+uninstall_nezha() {
+  reading "\n确定要卸载吗？【y/n】: " choice
+    case "$choice" in
+       [Yy])
+          kill -9 $(ps aux | grep '$WORKDIR/dashboard' | awk '{print $2}')
+		  echo "删除安装目录: $WORKDIR"
+          rm -rf $WORKDIR
+          ;;
+        [Nn]) exit 0 ;;
+    	*) red "无效的选择，请输入y或n" && menu ;;
+    esac
+}
+
+restart_nezha() {
+  reading "\n确定要重启吗？【y/n】: " choice
+    case "$choice" in
+       [Yy])
+          run_nezha
+          ;;
+        [Nn]) exit 0 ;;
+    	*) red "无效的选择，请输入y或n" && menu ;;
+    esac
+	
+}
+
+kill_nezha() {
+reading "\n关闭nezha-dashboar进程，确定继续清理吗？【y/n】: " choice
+  case "$choice" in
+    [Yy]) kill -9 $(ps aux | grep '$WORKDIR/dashboard' | awk '{print $2}') ;;
+       *) menu ;;
+  esac
+}
+
+kill_all_tasks() {
+reading "\n清理所有进程将退出ssh连接，确定继续清理吗？【y/n】: " choice
+  case "$choice" in
+    [Yy]) killall -9 -u $(whoami) ;;
+       *) menu ;;
+  esac
+}
+
+
+#主菜单
+menu() {
+    clear
+    echo ""
+    purple "=== AM科技 serv00 | nezha-dashboard哪吒面板 一键安装脚本 ===\n"
+    purple "转载请著名出处，请勿滥用\n"
+    echo -e "${green}AM科技 YouTube频道    ：${yellow}https://youtube.com/@AM_CLUB${re}"
+    echo -e "${green}AM科技 GitHub仓库     ：${yellow}https://github.com/amclubs${re}"
+    echo -e "${green}AM科技 个人博客       ：${yellow}https://am.809098.xyz${re}"
+    echo -e "${green}AM科技 TG交流群组     ：${yellow}https://t.me/AM_CLUBS${re}"
+    echo -e "${green}AM科技 脚本视频教程   ：${yellow}https://youtu.be/2B5yN09Wd_s${re}"
+    echo   "======================="
+    green  "1. 安装nezha-dashboard"
+    echo   "======================="
+    red    "2. 卸载nezha-dashboard"
+    echo   "======================="
+    green  "3. 重启nezha-dashboard"
+    echo   "======================="
+    green  "4. 查看配置信息"
+    echo   "======================="
+    yellow "5. 关闭nezha-dashboar进程"
+    echo   "======================="
+    yellow "6. 清理所有进程"
+    echo   "======================="
+    red    "7. serv00系统初始化"
+    echo   "======================="
+    red    "0. 退出脚本"
+    echo   "======================="
+
+    # 用户输入选择
+    reading "请输入选择(0-5): " choice
+    echo ""
+    
+    # 根据用户选择执行对应操作
+    case "$choice" in
+        1) install_nezha ;;
+        2) uninstall_nezha ;;
+        3) restart_nezha ;;
+        4) cat $WORKDIR/data/config.yaml ;;
+        5) kill_nezha ;;
+        6) kill_all_tasks ;;
+        7) system_initialize ;;
+        0) exit 0 ;;
+        *) red "无效的选项，请输入 0 到 5" ;;
+    esac
+}
+menu
