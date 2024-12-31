@@ -63,22 +63,27 @@ download_nezha() {
     return 0
 }
 
-generate_config(){
+generate_config() {
     echo
     echo "初始化nezha-dashboard配置"
 
     if [ -e "$WORKDIR/data/config.yaml" ]; then
         echo "已初始化nezha-dashboard配置"
     else
-        nohup ${WORKDIR}/start.sh >/dev/null 2>&1 &
-        sleep 3
-        dashboard_pid=$(ps aux | grep '$WORKDIR/dashboard' | grep -v 'grep' | awk '{print $2}')
+        nohup ${WORKDIR}/dashboard >/dev/null 2>&1 &
+        sleep 5
+
+        dashboard_pid=$(ps aux | grep "${WORKDIR}/dashboard" | grep -v 'grep' | awk '{print $2}')
         if [ -n "$dashboard_pid" ]; then
             kill -9 "$dashboard_pid"
             echo "初始化nezha-dashboard配置成功"
         else
-            echo "dashboard未正常启动，初始化失败"
-            return 1
+            if [ -e "$WORKDIR/data/config.yaml" ]; then
+                echo "初始化nezha-dashboard配置成功。"
+            else
+                echo "dashboard未正常启动，初始化失败"
+                exit 1
+            fi
         fi
     fi
 
@@ -92,13 +97,14 @@ generate_config(){
     fi
 
     if [ -e "${WORKDIR}/data/config.yaml" ]; then
-        sed -i '' "s/8008/${nz_site_port}/" ${WORKDIR}/data/config.yaml
+								sed -i '' "s/8008/${nz_site_port}/" ${WORKDIR}/data/config.yaml
         echo "端口已更新为: ${nz_site_port}"
     else
         echo "配置文件不存在，更新端口失败"
         return 1
     fi
 }
+
 
 generate_run() {
     cat > ${WORKDIR}/start.sh << EOF
@@ -130,12 +136,6 @@ run_nezha(){
 check_and_run() {
     if pgrep -f '$WORKDIR/dashboard' > /dev/null; then
         echo "程序已运行"
-        exit
-    fi
-
-    if [ -e ${WORKDIR}/start.sh ]; then
-        echo "nezha-dashboard已安装，重新运行start.sh"
-        run_nezha
         exit
     fi
 }
